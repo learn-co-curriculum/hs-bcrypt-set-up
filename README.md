@@ -7,13 +7,13 @@ type: study guide
 
 ## Setting Up Your App with Bcrypt
 
-We want our users to be able to sign in with a password but we can't just save user passwords in plain text. That makes it too easy for someone to hack in to our system and steal everyone's secrets.
+We want our users to sign in with a password, but we can't just save user passwords in plain text. That makes it too easy for someone to hack in to our system and steal everyone's secrets.
 
 We’re going to set up secure password storage with a gem called bcrypt that will encrypt our users passwords before we save them in our database. 
   * You can learn more about bcrypt [here](https://github.com/codahale/bcrypt-ruby).
+  * Bcrypt() is a hashing algorithm, which means it takes a chunk of data (your user's password) and create a "digital fingerprint," or hash, of it (essentially a long string of numbers and letters like this: `$2a$10$vI8aWBnW3fID.ZQ4/zo1G.q1lRps.9cGLcZEiGDMVr5yUP1KUOYTa`). 
 
-+ Bcrypt() is a hashing algorithm, which means it takes a chunk of data (e.g., your user's password) and create a "digital fingerprint," or hash, of it.  * Essentially a long string of numbers and letters like this: $2a$10$vI8aWBnW3fID.ZQ4/zo1G.q1lRps.9cGLcZEiGDMVr5yUP1KUOYTa. 
-+ Our first step is to add the bcrypt gem to our Gemfile
++ *Step 1* - Add the bcrypt gem to our Gemfile
   ```ruby
      gem "bcrypt"
   ```
