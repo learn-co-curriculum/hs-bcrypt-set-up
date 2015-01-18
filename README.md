@@ -13,15 +13,16 @@ We’re going to set up secure password storage with a gem called [Bcrypt](https
   
   + Bcrypt uses a hashing algorithm, which means it takes a chunk of data (your user's password) and create a "digital fingerprint," or hash, of it. Essentially a long string of numbers and letters like this: `$2a$10$vI8aWBnW3fID.ZQ4/zo1G.q1lRps.9cGLcZEiGDMVr5yUP1KUOYTa`. 
 
-**Step 1** - Add the bcrypt gem `gem "bcrypt"` to your Gemfile and run `bundle install` from the terminal.
+**Step 1** - Add the `gem "bcrypt"` to your Gemfile and run `bundle install` from the terminal.
 
-*Step 2* - add a `password_hash` column to our users table so we can store our user's encrypted password. 
-  * Step 1 - Create a migration to modify your users table:
+**Step 2** - Add a `password_hash` column to the users table to store the user's encrypted password.
+
+  + Create a migration to modify your users table:
   ```ruby
   rake db:create_migration NAME=”add_password_hash_to_users”
   ```
-  which will create a new timestamped migration file in `db/migrate`
-  * Step 2 - In the timestamped migration file replace the `def change` method with these up and down methods
+  
+  * In the timestamped migration file (under `db/migrate`) replace the `def change` method with these up and down methods
   ```ruby
     def up
       add_column :users, :password_hash, :string
@@ -30,9 +31,11 @@ We’re going to set up secure password storage with a gem called [Bcrypt](https
     def down
       remove_column :users, :password_hash, :string
     end
-    ```
-  * Step 3 - In your terminal run `rake db:migrate`
-  * Step 4 - Check your `schema.rb` file (in the db directory). You should see a `t.string "password_hash"` in your users table.
+  ```
+  * In the terminal run `rake db:migrate`
+
+  * Check your `schema.rb` file (in the db directory). You should see a `t.string "password_hash"` in your users table.
+  
 + Next we'll need to add some standard code to our users model in `User.rb` (in the app/models directory) so that your User class looks like this:
 
 ```ruby
