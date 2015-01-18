@@ -17,7 +17,7 @@ We’re going to set up secure password storage with a gem called [Bcrypt](https
 
 **Step 2** - Add a `password_hash` column to the users table to store the user's encrypted password.
 
-  + Create a migration to modify your users table:
+  + Run this command in your terminal to create a migration to modify your users table:
   ```ruby
   rake db:create_migration NAME=”add_password_hash_to_users”
   ```
@@ -35,8 +35,8 @@ We’re going to set up secure password storage with a gem called [Bcrypt](https
   * In the terminal run `rake db:migrate`
 
   * Check your `schema.rb` file (in the db directory). You should see a `t.string "password_hash"` in your users table.
-  
-+ Next we'll need to add some standard code to our users model in `User.rb` (in the app/models directory) so that your User class looks like this:
+
+**Step 3** - Add the Bcrypt password methods to your users model in `app/models/User.rb` so that your User class looks like this:
 
 ```ruby
 class User < ActiveRecord::Base
@@ -45,7 +45,7 @@ class User < ActiveRecord::Base
   include BCrypt
 
   def password
-    @password ||= Password.new(password_hash)
+    @password = Password.new(password_hash)
   end
 
   def password=(new_password)
@@ -54,26 +54,39 @@ class User < ActiveRecord::Base
   end
 end
 ```
+  + The `def password=` method creates a new password hash for the user - we'll use this to set the user’s password when they sign up.
+  + The `def password` method will be used to compare the user's saved password to the password they use when logging in. 
 
-Great! Now let’s take a look at the rest of this example code in the bcrypt documentation.  
-Line 5 - We haven’t talked about this in class but there is something in Ruby called a Module. Modules are used to help keep our code organized and make it easier to reuse and share.
-If we dig into the bcrypt gem we’ll find BCrypt module that contains a Password class with a create method. 
-Line 7 down should look a little familiar.
-It’s been a while since we’ve created readers and writers, but that is essentially what these methods are. 
-The `def password=` method creates a new password hash for the user
-This is a method that we would use to set the user’s password when they sign up for an account OR if we add functionality to allow users to reset their password (which we should).
-The reader method `def password` decrypts the saved password_hash Password.new(password_hash) so we can compare it to the password that the user submits in the log in form.
-This `||=` is something we haven’t seen before. It’s essentially means if @password is not already set then set it to the decrypted password.
-I think bcrypt does this because you might have an app with several different entry points and if it has already run the decryption once during the session then @password has already been set and you don’t need to run Password.new again.
-Remember running the decryption is intentionally slow and expensive so you don’t want to run it anymore than you have to.
-You don’t need to worry about this though for our little app (so if it’s confusing just delete the ||) and understand that calling  @user.password will return the user’s decrypted password_hash.
-Let’s go ahead and copy and paste this code from `include BCrypt` on down to the end of the password= method and paste it into our User model.
-So now we have our Model portion of our application set up for creating and storing passwords but don’t forget every time we add functionality to our website we need to think about all the parts of the MVC. So what comes next?
-The views. We’ll need to take in a password from our users when they sign up and sign in. What do we need to modify? Everyone add a password input field to their sign up and sign in forms. 
-Finally, the controller. This is where we’ll be writing the code to actually use those password and password= methods. 
-Let’s start with the `post ‘/sign-up’`. The User.new and user.save methods are good we want to keep those. What else needs to happen now that we are also taking in a params[:passwor]? Hint: Don’t overthink it! You know how to use readers and writers to set an attribute and access an attribute. 
-We need to set the password, right? Which means using the writer method, password= method and setting @user.password = params[:password]
-Don’t even worry about what is happening under the hood! Bcrypt has got you covered. 
-Now let’s move on the ‘post ‘/sign-in’ route. Here we are looking for the user and if they exist we give them a session id. Now we need to confirm not only that they exist but that their password matches. How do we access a user’s password? With the reader `def password`. What do we want to compare this to? The password that the user has just input params[:password]. So `if @user.password == params[:password]` create a session[:user_id]
+We've updated the models (the M in our MVC) so now onto the V - views.
 
-You actually don’t need to remember anything we just talked about. As long as you use the == for comparison, just like you normally would you can check if a stored password_hash is equal to a submitted password (@user.password == submitted_password).
+**Step 4** - Add a password input field to the user sign up and sign in forms. 
+
+Finally, onto the C in MVC the controller. 
+
+**Step 5** - In your application controller (`app/controllers/application_controller.rb`) go to the `post ‘/sign-up’` route and user the `def password=` method to set the user's password. Your `post ‘/sign-up’` route should now look like this:
+```ruby
+  post '/sign-up' do
+    @user = User.new(:name => params[:name], :email => params[:email])
+    @user.password = params[:password]
+    @user.save
+    session[:user_id] = @user.id
+    redirect '/tweets'
+  end
+```
+
+**Step 6** - In the `‘post ‘/sign-in’` route use the `def password` method to confirm that the user has submitted the correct password. Your `post ‘/sign-in’` route should now look like this:
+```ruby
+  post '/sign-in' do
+    @user = User.find_by(:email => params[:email])
+    if @user.password == params[:password]
+      session[:user_id] = @user.id
+    end
+    redirect "/tweets"
+  end
+```
+
+You are ready to test out your app! **If you already have test users in your database you will need to set their passwords via `tux` before you can test out signing them in. Or you can start over by dropping your database - do `rake db:rollback` four times (once for every migration) - and then rake db:migrate to rebuild.** 
+
+
+
+
