@@ -64,7 +64,7 @@ end
 
 That's it for the M in our MVC - now onto the V.
 
-**Step 4** - Add password input fields to the user Sign Up and Sign In forms. 
+**Step 4** - Add password input fields to the user Sign Up and Sign In forms in your views. 
 
 Finally, onto the C. 
 
@@ -90,7 +90,9 @@ Finally, onto the C.
   end
 ```
 
-You are ready to test out your app! **If you already have test users in your database you will need to set their passwords via `tux` before you can test out signing them in. Or you can start over by dropping your database - do `rake db:rollback` four times (once for every migration) - and then rake db:migrate to rebuild.** 
+You are ready to test out your app! 
+
+**If you already have test users in your database you will need to set their passwords via the console - run `tux` in your terminal - before you can test out the sign in form. Or you can delete all your entries by dropping your database - do `rake db:rollback` four times (once for every migration) - and then rake db:migrate to rebuild.** 
 
 
 
