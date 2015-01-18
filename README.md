@@ -64,11 +64,11 @@ end
 
 That's it for the M in our MVC - now onto the V.
 
-**Step 4** - Add a password input field to the user sign up and sign in forms. 
+**Step 4** - Add password input fields to the user Sign Up and Sign In forms. 
 
-Finally, onto the C in MVC the controller. 
+Finally, onto the C. 
 
-**Step 5** - In your application controller (`app/controllers/application_controller.rb`) go to the `post ‘/sign-up’` route and user the `def password=` method to set the user's password. Your `post ‘/sign-up’` route should now look like this:
+**Step 5** - In your application controller (`app/controllers/application_controller.rb`) go to the `post ‘/sign-up’` route and add the `def password=` method to set the user's password. Your `post ‘/sign-up’` route should now look like this:
 ```ruby
   post '/sign-up' do
     @user = User.new(:name => params[:name], :email => params[:email])
