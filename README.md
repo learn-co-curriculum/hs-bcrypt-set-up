@@ -1,9 +1,4 @@
----
-tags: cryptography, bcrypt, kids, ruby, advanced, study guide
-language: ruby
-level: 2
-type: study guide
----
+
 
 ## Setting Up Your App with Bcrypt
 
