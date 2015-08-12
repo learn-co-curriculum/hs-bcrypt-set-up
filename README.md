@@ -16,7 +16,7 @@ Let's get started!
 
   + Run this command in your terminal to create a migration to modify your users table:
   ```ruby
-  rake db:create_migration NAME=”add_password_hash_to_users”
+  rake db:create_migration NAME=add_password_hash_to_users
   ```
   
   * In the timestamped migration file (under `db/migrate`) replace the `def change` method with these up and down methods
