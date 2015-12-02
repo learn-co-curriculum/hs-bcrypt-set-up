@@ -92,3 +92,5 @@ You are ready to test out your app!
 
 
 
+
+<a href='https://learn.co/lessons/hs-bcrypt-set-up' data-visibility='hidden'>View this lesson on Learn.co</a>
